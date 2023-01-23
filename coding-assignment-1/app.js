@@ -56,6 +56,39 @@ const validateData = async (request, response, next) => {
     next();
   }
 };
+
+const validateBody = (request, response, next) => {
+  const {
+    status = "",
+    priority = "",
+    category = "",
+    dueDate = "",
+  } = request.body;
+  priority_list = ["HIGH", "MEDIUM", "LOW"];
+  status_list = ["TO DO", "IN PROGRESS", "DONE"];
+  category_list = ["WORK", "HOME", "LEARNING"];
+
+  if (!status_list.includes(status)) {
+    response.status(400);
+    response.send("Invalid Todo Status");
+  } else if (!priority_list.includes(priority)) {
+    response.status(400);
+    response.send("Invalid Todo Priority");
+  } else if (!category_list.includes(category)) {
+    response.status(400);
+    response.send("Invalid Todo Category");
+  } else if (dueDate !== "") {
+    if (!isValid(new Date(dueDate))) {
+      response.status(400);
+      response.send("Invalid Due Date");
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+};
+
 // API 1: GET TODOS BY STATUS
 app.get("/todos/", validateData, async (request, response) => {
   const {
@@ -66,8 +99,13 @@ app.get("/todos/", validateData, async (request, response) => {
   } = request.query;
   console.log(request.query);
   const getTodoByQuery = `
-            SELECT * FROM todo WHERE status LIKE "%${status}%" AND priority LIKE "%${priority}%" AND todo LIKE "%${search_q}%" AND category LIKE "%${category}%"
-            ;`;
+            SELECT * FROM todo 
+            WHERE 
+                status LIKE "%${status}%" AND 
+                priority LIKE "%${priority}%" AND 
+                todo LIKE "%${search_q}%" AND 
+                category LIKE "${category}%"
+            ORDER BY id;`;
   const dbResponse = await db.all(getTodoByQuery);
   console.log("passed this");
   response.send(dbResponse);
@@ -87,8 +125,8 @@ app.get("/todos/:todoId/", async (request, response) => {
 //API 3:GET TODOS BY AGENDA
 app.get("/agenda/", async (request, response) => {
   let { date } = request.query;
-  date = "20222-3-5";
-  console.log(date);
+  //   date = "20222-3-5";
+  //   console.log(date);
   console.log(new Date(date));
   let newDate = format(new Date(date), "yyyy-MM-dd");
   console.log(newDate);
@@ -103,7 +141,7 @@ app.get("/agenda/", async (request, response) => {
 });
 
 //API 4: CREATE TODOS
-app.post("/todos/", async (request, response) => {
+app.post("/todos/", validateBody, async (request, response) => {
   const { id, todo, priority, status, category, dueDate } = request.body;
   const createTodoQuery = `
         INSERT INTO todo (id,todo,priority,status,category,due_date)
@@ -134,7 +172,6 @@ app.put("/todos/:todoId", async (request, response) => {
             priority = '${priority}',
             category = '${category}',
             due_date = '${dueDate}'
-            
         WHERE id = ${todoId};`;
   const dbResponse = await db.run(updateTodoQuery);
   if (request.body.status !== undefined) {

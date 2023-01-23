@@ -2,16 +2,17 @@
 
 //GET TODOS BY QUERIES
 GET http://localhost:3001/todos/?status=TO%20DO
+
 ###
 //GET TODO BY ID
-GET http://localhost:3000/todos/5/
+GET http://localhost:3001/todos/5/
 
 ###
 //get todo by due date
-GET http://localhost:3000/agenda/?date=2021-12-12
+GET http://localhost:3001/agenda/?date=2021-12-12
 ###
 //CREATE TODO
-POST http://localhost:3000/todos/
+POST http://localhost:3001/todos/
 Content-Type: application/json
 
 {
