@@ -154,3 +154,38 @@ app.get("/user/followers/", authenticateToken, async (request, response) => {
   response.send(users);
 });
 //API 6:GET TWEETS
+app.get("/tweets/:tweetId/", authenticateToken, async (request, response) => {
+  const { username } = request;
+  const { tweetId } = request.params;
+  const getUserIdQuery = `SELECT user_id FROM user WHERE username = '${username}';`;
+  const user = await db.get(getUserIdQuery);
+  const userId = user.user_id;
+  const peopleFollowedByUser = `
+                            SELECT follower.following_user_id FROM 
+                            follower join user on user.user_id = ${userId}
+                            `;
+  const tweetFromUser = `SELECT tweet_id FROM tweet where user_id in (${peopleFollowedByUser})
+                            AND tweet_id = ${tweetId};`;
+  const tweet = await db.get(tweetFromUser);
+
+  if (tweet === undefined) {
+    console.log("inside");
+    response.status(401);
+    response.send("Invalid Request");
+  } else {
+    console.log("inside");
+    const requiredQuery = `
+                        SELECT tweet.tweet,
+                        SUM(like.like_id) as likes,
+                        SUM(reply.reply_id) as replies,
+                        tweet.date_time as dateTime
+                        FROM (tweet LEFT JOIN like on tweet.tweet_id = like.tweet_id ) AS T
+                        LEFT JOIN reply on reply.tweet_id = tweet.tweet_id
+                        WHERE tweet.tweet_id = ${tweetId}
+                        GROUP BY tweet.tweet_id;`;
+    const dbResponse = await db.get(requiredQuery);
+    response.send(dbResponse);
+  }
+
+  //   const getTweetsByTweetId
+});
