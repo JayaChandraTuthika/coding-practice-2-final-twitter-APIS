@@ -1,0 +1,31 @@
+//REGISTER
+POST http://localhost:3005/register
+Content-Type: application/json
+
+{
+  "username": "adam_richard",
+  "password": "richard_567",
+  "name": "Adam Richard",
+  "gender": "male"
+}
+###
+//LOGIN API
+POST http://localhost:3005/login/
+Content-Type: application/json
+
+{
+  "username":"JoeBiden",
+  "password":"biden@123"
+}
+###
+//API 3: get tweets latest
+GET http://localhost:3005/user/tweets/feed/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwiaWF0IjoxNjc0NDg3NDUyfQ.rXHu7w-TV3WrFHg-8QML1srgXG9h2VE_d3kNfnQnNY8
+###
+//API 4: GET USERS FOLLOWED
+GET http://localhost:3005/user/following/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwiaWF0IjoxNjc0NDg3NDUyfQ.rXHu7w-TV3WrFHg-8QML1srgXG9h2VE_d3kNfnQnNY8
+###
+//API 5: GET FOLLOWERS
+GET http://localhost:3005/user/followers/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkpvZUJpZGVuIiwiaWF0IjoxNjc0NDg3NDUyfQ.rXHu7w-TV3WrFHg-8QML1srgXG9h2VE_d3kNfnQnNY8
