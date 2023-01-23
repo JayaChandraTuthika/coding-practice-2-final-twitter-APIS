@@ -1,0 +1,34 @@
+
+
+//GET TODOS BY QUERIES
+GET http://localhost:3001/todos/?status=TO%20DO
+###
+//GET TODO BY ID
+GET http://localhost:3000/todos/5/
+
+###
+//get todo by due date
+GET http://localhost:3000/agenda/?date=2021-12-12
+###
+//CREATE TODO
+POST http://localhost:3000/todos/
+Content-Type: application/json
+
+{
+ "id": 6,
+ "todo": "Finalize event theme",
+ "priority": "LOW",
+ "status": "TO DO",
+ "category": "HOME",
+ "dueDate": "2021-02-22"
+}
+###
+//UPDATE TODO
+PUT http://localhost:3000/todos/5
+Content-Type: application/json
+
+#  { "category": "LEARNING" }
+{ "dueDate": "2021-01-12" }
+###
+//delete Todo
+DELETE http://localhost:3000/todos/7
