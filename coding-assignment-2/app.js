@@ -153,3 +153,4 @@ app.get("/user/followers/", authenticateToken, async (request, response) => {
   const users = await db.all(getIdQuery);
   response.send(users);
 });
+//API 6:GET TWEETS
